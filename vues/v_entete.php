@@ -98,7 +98,7 @@
                                 </a>
                             </li>
                             <li   <?php if ($uc == 'suiviFrais') { ?>class="active"<?php } ?>>
-                                <a style="color:orange" onclik="this.style.textcolor='#ffffff'" href="index.php?uc=suiviFrais&action=suiviFrais">
+                                <a style="color:orange" onclik="this.style.textcolor='#ffffff'" href="index.php?uc=suiviFrais&action=choixFiche">
                                     <a-me  style onclick="color:white"> <span  class="glyphicon glyphicon-euro"></span>
                                     
                                     Suivre le paiement des fiches de frais
