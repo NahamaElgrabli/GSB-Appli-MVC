@@ -251,7 +251,20 @@ class PdoGsb
             $requetePrepare->execute();
         }
     }
-
+/**
+     * Met à jour la table ligneFraisHorsForfait
+     * Met à jour la table ligneFraisHorsForfait pour un visiteur et
+     * un mois donné en enregistrant les nouveaux montants
+     *
+     * @param String $id ID du visiteur
+     * @param String $mois       Mois sous la forme aaaamm
+     * @param String $libelle libelle du frais
+     * @param String $date date du frais
+     * @param Integer $montant montant du frais
+     * @param String $idFrais id du frais
+     *
+     * @return null
+     */
     public function majFraisHorsForfait($id,$mois,$libelle,$date,$montant,$idFrais)
   {
      $dateFr = dateFrancaisVersAnglais($date);
@@ -592,6 +605,11 @@ class PdoGsb
            
         
     }
+    /**
+     * Retourne la liste de tous les visiteurs.
+     *
+     * @return array     la liste de tous les visiteurs sous forme de tableau associatif.
+     */
     public function getListeVisiteur()
    {
        $requetePrepare = PdoGSB::$monPdo->prepare(
@@ -605,6 +623,16 @@ class PdoGsb
        return $requetePrepare->fetchAll();
        
    }
+  /**
+     * Met à jour le libelle de la table ligneFraisHorsForfait
+     * pour le mois et le visiteur concerné pour un frais donné
+     *
+     * @param String  $id     ID du visiteur
+     * @param String  $mois            Mois sous la forme aaaamm
+     * @param String $idFrais id du frais
+     *
+     * @return null
+     */ 
    public function majLibelle($id, $mois, $idFrais){
     $requetePrepare = PdoGSB::$monPdo->prepare(      
               'UPDATE lignefraishorsforfait '  
@@ -644,7 +672,7 @@ class PdoGsb
     }
 
     
-
+/*
 public function getMontantUnitaire($id,$idFrais){
     if ($idFrais = 'KM'){
     $montant=$this->getMontantVehicule($id);
@@ -665,7 +693,7 @@ public function getMontantUnitaire($id,$idFrais){
 }
 return $montant;
 }
-
+*/
 
 
  /**
@@ -697,6 +725,15 @@ return $montant;
         
        
     }
+    /**
+     * Calcule la somme des frais forfait pour un visiteur et un mois donné 
+     * (produit des quantités par le montant des frais forfait)
+     *
+     * @param String $id     ID du visiteur
+     * @param String $leMois          Mois du frais
+     *
+     * @return un tableau avec le montant des frais forfait
+     */
      public function TotalFF($id,$mois){
       $requetePrepare = PdoGSB::$monPdo->prepare(
           'SELECT SUM(lignefraisforfait.quantite * fraisforfait.montant)'
@@ -710,7 +747,15 @@ return $montant;
       return $requetePrepare->fetchAll();
      
      }
-     
+    /**
+     * Calcule la somme des frais hors forfait pour un visiteur et un mois donné 
+     * (somme de tous les montants des frais hors forfait)
+     *
+     * @param String $id     ID du visiteur
+     * @param String $leMois          Mois du frais
+     *
+     * @return un tableau avec la somme des frais hors forfait
+     */ 
      public function TotalFHF($id,$mois)
    {  
        $requetePrepare = PdoGSB::$monPdo->prepare(
@@ -726,6 +771,17 @@ return $montant;
       return $requetePrepare->fetchAll();
    }
    
+    /**
+     * Modifie le champ montantValide de fichefrais, calcule le montant total 
+     * des frais  pour le mois et le visiteur donne
+     *
+     * @param String $id       ID du visiteur
+     * @param String $leMois            Mois sous la forme aaaamm
+     * @param String $totalFF             montant total des frais forfait pour ce mois
+     * @param String $totalFHF             montant total des frais hors forfait pour ce mois
+     *
+     * @return null
+     */
    public function calculMontantValide($id,$leMois,$totalFF,$totalFHF){
         for ($i = 0; $i < count($totalFHF); $i++) {
           $unMontant=$totalFF[$i];
